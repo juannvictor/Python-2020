@@ -53,5 +53,10 @@ hier_index = pd.MultiIndex.from_tuples(hier_index)
 print(hier_index)
 
 df = pd.DataFrame(np.random.randn(6,2), index=hier_index, columns=['A', 'B']) #criando uma tabela de multiníveis
+df.index.names = ["Grupo", "Número"]
 
 print(df)
+
+print(df.xs("G1"))
+
+print(df.xs(1, level="Número"))
