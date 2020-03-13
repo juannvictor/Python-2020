@@ -5,32 +5,32 @@ np.random.seed(101)
 
 df = pd.DataFrame(np.random.randn(5,4), index="A B C D E".split(), columns="W X Y Z".split())
 
-print(df)
+print(df) #printando
 
-print(df.W)
+print(df.W) #printando 
 
-df['new'] = df["W"] + df["X"]
-
-print(df)
-
-df.drop('new', axis=1, inplace=True)
+df['new'] = df["W"] + df["X"] #criando coluna new com a soma da coluna W e X
 
 print(df)
 
-print(df.loc[["A", 'B'], ['X', 'Y', 'Z']])
+df.drop('new', axis=1, inplace=True) #deletando a coluna new 
 
-print(df.iloc[1:4, 2:])
+print(df)
 
-bol = df >0
-print(df[bol])
+print(df.loc[["A", 'B'], ['X', 'Y', 'Z']]) #selecionando valores da linha A e B nas colunas X Y e Z
 
-print(df[df["W"]>0])
+print(df.iloc[1:4, 2:]) #selecionando valores em um intervalo determinado 
+ 
+bol = df >0 
+print(df[bol]) #selecionando todos os valores que sao maiores que 0 ou são True
+
+print(df[df["W"]>0]) #retornando todos os valores que sao maiores que 0 na coluna W
 
 print(df[df["W"]>0]["Y"]) #Retornando os valores da coluna Y levando em consideração todos os valores maiores que 0 na coluna W
 
-print(df[(df["W"]>0) | (df["Y"]>1)])
+print(df[(df["W"]>0) | (df["Y"]>1)]) #retornando os valores que obedecem a condição : maiores que 0 na coluna W e maiores que 1 na coluna Y
 
-print(df.reset_index())
+print(df.reset_index()) #resetando index
 
 #Implace=True ; o que for executado vai ser alterado no df inicial
 #Ex: df.reset_index(inplace=True) reseta os indexs ta tabela df pra (0, 1, 2, 3, 4)
