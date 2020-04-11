@@ -1,0 +1,70 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+
+df = pd.read_csv('911.csv')
+df.info()
+df.head()
+
+df['zip'].value_counts().head()
+df['twp'].value_counts().head()
+df['title'].nunique()
+df['razao'] = df['title'].apply(lambda x: x.split(':')[0])
+df['razao'].value_counts()
+
+sns.countplot(x='razao',data=df, palette='viridis')
+
+type(df['timeStamp'])
+df['timeStamp'] = pd.to_datetime(df['timeStamp'])
+df.info()
+time = df['timeStamp'].iloc[0]
+time.year
+len(df['timeStamp'])
+
+df['hour'] = df['timeStamp'].apply(lambda time: time.hour)
+df['month'] = df['timeStamp'].apply(lambda time: time.month)
+df['dayweek'] = df['timeStamp'].apply(lambda time: time.dayofweek)
+
+dmap = {0:'Mon',1:'Tue',2:'Wed',3:'Thu',4:'Fri',5:'Sat',6:'Sun'}
+df['dayweek'] = df['dayweek'].map(dmap)
+df.head()
+sns.countplot(x='dayweek', data=df, palette='viridis', hue='razao')
+
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+
+sns.countplot(x='month', data=df, palette='viridis', hue='razao')
+
+plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+
+byMonth = df.groupby('month').count()
+byMonth['lat'].plot()
+
+sns.lmplot(x='month', y='twp', data=byMonth.reset_index())
+
+df['data'] = df['timeStamp'].apply(lambda time: time.date())
+byDate = df.groupby('data').count()
+byDate['twp'].plot()
+
+plt.tight_layout()
+
+df[df['razao']=='Traffic'].groupby('data').count()['twp'].plot()
+plt.title('Traffic')
+plt.tight_layout()
+df[df['razao']=='Fire'].groupby('data').count()['twp'].plot()
+plt.title('Fire')
+plt.tight_layout()
+df[df['razao']=='EMS'].groupby('data').count()['twp'].plot()
+plt.title('EMS')
+plt.tight_layout()
+
+dayHour = df.groupby(by=['dayweek','hour']).count()['razao'].unstack()
+
+plt.figure(figsize=(12,8))
+sns.heatmap(dayHour, cmap='viridis')
+sns.clustermap(dayHour, cmap='viridis')
+dayMonth = df.groupby(by=['dayweek','month']).count()['razao'].unstack()
+plt.figure(figsize=(12,8))
+sns.heatmap(dayMonth, cmap='viridis')
+sns.clustermap(dayMonth, cmap='viridis')
